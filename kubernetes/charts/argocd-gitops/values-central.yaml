@@ -4,7 +4,7 @@ infraAccountId: "765355018960"
 rootNamespace: argocd
 
 stage: central
-defaultRepoURL: https://github.com/jacobhjkim/declarative-eks
+defaultRepoURL: https://github.com/jacobhjkim/declarative-eks-tutorial
 defaultTargetRevision: main
 defaultProject: central-apps
 destinationServer: https://kubernetes.default.svc
