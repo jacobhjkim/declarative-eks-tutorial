@@ -1,0 +1,4 @@
+cert-manager:
+  enabled: true
+  installCRDs: true
+  namespace: kube-system
