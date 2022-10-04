@@ -1,0 +1,70 @@
+ingress:
+  ingressClassName: alb
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/certificate-arn: 'arn:aws:acm:ap-northeast-2:765355018960:certificate/757c8b86-0316-419a-947a-e182e6f1f1a7'
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+  hosts:
+    - host: vault.jacobkim.io
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: vault
+              port:
+                number: 8200
+vault:
+  ui:
+    enabled: true
+  injector:
+    enabled: false
+  server:
+    logLevel: info
+    serviceAccount:
+      annotations:
+        eks.amazonaws.com/role-arn: "arn:aws:iam::765355018960:role/central-vault-cluster"
+    ingress:
+      enabled: false
+    ha:
+      enabled: true
+      replicas: 3
+      config: |
+        disable_mlock = true
+        plugin_directory = "/vault/plugins/"
+        ui = true
+        
+        listener "tcp" {
+          tls_disable = 1
+          address = "[::]:8200"
+          cluster_address = "[::]:8201"
+          telemetry {
+            unauthenticated_metrics_access = "true"
+          }
+        }
+        seal "awskms" {
+          region = "ap-northeast-2"
+          kms_key_id = "753188e2-8c73-458a-8ed9-c13c8298d75c"
+        }
+        storage "dynamodb" {
+          ha_enabled = "true"
+          region     = "ap-northeast-2"
+          table      = "vault-backend-prod"
+        }
+        telemetry {
+          prometheus_retention_time = "12h",
+          disable_hostname = true
+        }
+
+    podDisruptionBudget:
+      maxUnavailable: 1
+
+    tolerations:
+      - key: workerType
+        operator: Equal
+        value: vault
+        effect: NoSchedule
+    nodeSelector:
+      nodeType: vault-worker

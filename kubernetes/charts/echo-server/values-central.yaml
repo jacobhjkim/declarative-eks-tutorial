@@ -1,0 +1,3 @@
+certificateArn: "arn:aws:acm:ap-northeast-2:765355018960:certificate/757c8b86-0316-419a-947a-e182e6f1f1a7"
+domainName: jacobkim.io
+clusterName: central

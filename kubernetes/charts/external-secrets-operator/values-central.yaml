@@ -1,0 +1,24 @@
+external-secrets:
+  podSecurityContext:
+    fsGroup: 1001
+  serviceAccount:
+    name: external-secrets-operator
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::765355018960:role/central-external-secrets
+  webhook:
+    serviceAccount:
+      annotations:
+        eks.amazonaws.com/role-arn: arn:aws:iam::765355018960:role/central-external-secrets
+  certController:
+    serviceAccount:
+      annotations:
+        eks.amazonaws.com/role-arn: arn:aws:iam::765355018960:role/central-external-secrets
+
+clusterSecretStores:
+  vault:
+    endpoint: "https://vault.jacobkim.io"
+    items:
+      - name: vault-kv-central
+        path: "secret"
+
+clusterName: central

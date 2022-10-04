@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-bootstrap-{{ .Values.clusterName }}
+  namespace: argocd
+  labels:
+    project: default
+    cluster: {{ .Values.clusterName }}
+    application: argocd-setup
+    servicePhase: {{ .Values.stage }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  destination:
+    namespace: argocd
+    name: "in-cluster"
+  source:
+    repoURL: "https://github.com/jacobhjkim/declarative-eks"
+    path: "kubernetes/charts/argocd-setup"
+    targetRevision: main
+    helm:
+      valueFiles:
+        - values-central.yaml
+      releaseName: argocd-setup
+  syncPolicy:
+    automated:
+      selfHeal: true

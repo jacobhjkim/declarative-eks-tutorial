@@ -1,0 +1,17 @@
+appProjects: # TODO: specify app policies for each AppProject.
+  - name: bootstrap
+    description: bootstrap apps like app of apps
+  - name: central-apps
+    description: kubernetes apps in central cluster
+  - name: dev-apps
+    description: kubernetes apps in dev cluster
+
+clusterName: central
+
+rootNamespace: argocd
+
+clusters:
+  - name: central
+    stage: central
+  - name: dev
+    stage: dev

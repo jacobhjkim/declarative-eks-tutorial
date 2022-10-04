@@ -1,0 +1,48 @@
+argo-cd:
+  controller:
+    replicas: 1
+    args:
+      statusProcessors: "50"
+      operationProcessors: "50"
+    env:
+      - name: "ARGOCD_CONTROLLER_REPLICAS"
+        value: "1"
+  dex:
+    enabled: false
+  redis:
+    enabled: false
+  redis-ha:
+    enabled: true
+    haproxy:
+      labels:
+        # custom labels for argocd headless mode
+        app.kubernetes.io/name: argocd-redis-ha-haproxy
+  server:
+    replicas: 1
+    extraArgs:
+      - --insecure
+    ingress:
+      enabled: true
+      ingressClassName: alb
+      annotations:
+        alb.ingress.kubernetes.io/scheme: internet-facing
+        alb.ingress.kubernetes.io/certificate-arn: 'arn:aws:acm:ap-northeast-2:765355018960:certificate/757c8b86-0316-419a-947a-e182e6f1f1a7'
+        alb.ingress.kubernetes.io/target-type: ip
+        alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+        alb.ingress.kubernetes.io/ssl-redirect: '443'
+      hosts:
+        - argocd.jacobkim.io
+    config:
+      statusbadge.enabled: "true"
+      accounts.admin: apiKey
+      url: https://argocd.jacobkim.io
+  repoServer:
+    replicas: 1
+  configs:
+    secret:
+      createSecret: false
+
+clusters: []
+
+clusterName: central
+stage: central

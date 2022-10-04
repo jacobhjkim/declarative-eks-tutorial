@@ -1,0 +1,12 @@
+clusterName: central
+clusterRegion: ap-northeast-2
+infraAccountId: "765355018960"
+rootNamespace: argocd
+
+stage: central
+defaultRepoURL: https://github.com/jacobhjkim/declarative-eks
+defaultTargetRevision: main
+defaultProject: central-apps
+destinationServer: https://kubernetes.default.svc
+
+apps: []

@@ -1,0 +1,54 @@
+{{- range .Values.appProjects }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: {{ .name }}
+  namespace: {{ $.Values.rootNamespace }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+spec:
+  description: {{ .description }}
+  sourceRepos:
+    - '*'
+  destinations:
+    - namespace: '*'
+      server: '*'
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  orphanedResources:
+    warn: false
+{{- end }}
+
+{{- range .Values.clusters }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-{{ .name }}-apps
+  namespace: argocd
+  labels:
+    project: {{ .name }}-apps
+    cluster: {{ .name }}
+    application: argocd-{{ .name }}-apps
+    stage: {{ .stage }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: bootstrap
+  destination:
+    namespace: argocd
+    server: "https://kubernetes.default.svc"
+  source:
+    repoURL: "https://github.com/jacobhjkim/declarative-eks"
+    path: "kubernetes/charts/argocd-gitops"
+    targetRevision: main
+    helm:
+      valueFiles:
+        - values-{{ .name }}.yaml
+      releaseName: argocd-gitops
+  syncPolicy:
+    automated:
+      selfHeal: true
+{{- end}}

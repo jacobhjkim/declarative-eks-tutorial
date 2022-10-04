@@ -1,0 +1,9 @@
+dependencies:
+- name: argo-cd
+  repository: https://argoproj.github.io/argo-helm
+  version: 4.10.0
+- name: redis-ha
+  repository: https://dandydeveloper.github.io/charts/
+  version: 4.17.1
+digest: sha256:74226f8b1ac2ea74b02b15b84b39ae2f10041c6e859dd8d8faec5e029f9d5da6
+generated: "2022-07-22T01:01:45.938179+09:00"
