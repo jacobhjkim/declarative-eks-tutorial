@@ -9,4 +9,10 @@ defaultTargetRevision: main
 defaultProject: central-apps
 destinationServer: https://kubernetes.default.svc
 
-apps: []
+apps:
+  - name: cert-manager
+    namespace: kube-system
+    source:
+      path: kubernetes/charts/cert-manager
+    valueFiles:
+      - values-central.yaml

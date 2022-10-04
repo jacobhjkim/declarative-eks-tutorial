@@ -41,7 +41,7 @@ spec:
     namespace: argocd
     server: "https://kubernetes.default.svc"
   source:
-    repoURL: "https://github.com/jacobhjkim/declarative-eks"
+    repoURL: "https://github.com/jacobhjkim/declarative-eks-tutorial"
     path: "kubernetes/charts/argocd-gitops"
     targetRevision: main
     helm:

@@ -4,19 +4,12 @@ argo-cd:
     args:
       statusProcessors: "50"
       operationProcessors: "50"
-    env:
-      - name: "ARGOCD_CONTROLLER_REPLICAS"
-        value: "1"
   dex:
     enabled: false
   redis:
-    enabled: false
-  redis-ha:
     enabled: true
-    haproxy:
-      labels:
-        # custom labels for argocd headless mode
-        app.kubernetes.io/name: argocd-redis-ha-haproxy
+  redis-ha:
+    enabled: false
   server:
     replicas: 1
     extraArgs:
@@ -46,3 +39,7 @@ clusters: []
 
 clusterName: central
 stage: central
+
+git:
+  url: "https://github.com/jacobhjkim/declarative-eks-tutorial"
+  username: jacobhjkim

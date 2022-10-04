@@ -8,6 +8,8 @@ metadata:
     cluster: {{ .Values.clusterName }}
     application: argocd-setup
     servicePhase: {{ .Values.stage }}
+  annotations:
+    helm.sh/hook: "post-install,post-upgrade"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
@@ -16,12 +18,12 @@ spec:
     namespace: argocd
     name: "in-cluster"
   source:
-    repoURL: "https://github.com/jacobhjkim/declarative-eks"
+    repoURL: {{ .Values.git.url }}
     path: "kubernetes/charts/argocd-setup"
     targetRevision: main
     helm:
       valueFiles:
-        - values-central.yaml
+        - values-{{ .Values.clusterName }}.yaml
       releaseName: argocd-setup
   syncPolicy:
     automated:
