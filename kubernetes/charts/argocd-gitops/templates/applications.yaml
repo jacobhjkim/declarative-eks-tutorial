@@ -25,10 +25,6 @@ spec:
     repoURL: {{ $.Values.defaultRepoURL }}
     {{- end }}
     targetRevision: {{ .source.targetRevision | default $.Values.defaultTargetRevision | quote }}
-    {{- if .skipCrds }}
-    syncOptions:
-      - Replace=true
-    {{- end }}
     helm:
       releaseName: {{ .name }}
       {{- if .skipCrds }}
