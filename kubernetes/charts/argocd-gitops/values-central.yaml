@@ -16,7 +16,7 @@ apps:
       path: kubernetes/charts/actions-runner-controller
     valueFiles:
       - values-central.yaml
-    skipCrds: true
+    skipCrds: false
     ignoreDifferences:
       - kind: Secret
         name: actions-runner-controller-serving-cert
