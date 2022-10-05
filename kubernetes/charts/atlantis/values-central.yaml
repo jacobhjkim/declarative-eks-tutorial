@@ -1,6 +1,8 @@
 atlantis:
   logLevel: info
   orgAllowlist: github.com/jacobhjkim/declarative-eks-tutorial
+  github:
+    user: jacobhjkim
   vcsSecretName: atlantis-vcs-secret
   allowForkPRs: true
   hidePrevPlanComments: true
