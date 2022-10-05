@@ -6,7 +6,7 @@ spec:
   replicas: 1
   template:
     spec:
-      repository: jacobhjkim/declarative-eks-tutorial
+      repository: {{ .Values.ghaRunner.repository }}
       serviceAccountName: {{ .Values.ghaRunner.name }}
 ---
 apiVersion: actions.summerwind.dev/v1alpha1
