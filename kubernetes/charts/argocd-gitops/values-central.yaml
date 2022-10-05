@@ -37,6 +37,12 @@ apps:
           - /webhooks/0/clientConfig/caBundle
           - /webhooks/1/clientConfig/caBundle
           - /webhooks/2/clientConfig/caBundle
+  - name: atlantis
+    namespace: atlantis
+    source:
+      path: kubernetes/charts/atlantis
+    valueFiles:
+      - values-central.yaml
   - name: cert-manager
     namespace: kube-system
     source:

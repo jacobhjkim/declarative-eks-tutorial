@@ -2,6 +2,8 @@ apiVersion: actions.summerwind.dev/v1alpha1
 kind: RunnerDeployment
 metadata:
   name: {{ .Values.ghaRunner.name }}
+  annotations:
+    helm.sh/hook: "post-install,post-upgrade,pre-delete,pre-rollback"
 spec:
   replicas: 1
   template:
@@ -13,6 +15,8 @@ apiVersion: actions.summerwind.dev/v1alpha1
 kind: HorizontalRunnerAutoscaler
 metadata:
   name: {{ .Values.ghaRunner.name }}-autoscaler
+  annotations:
+    helm.sh/hook: "post-install,post-upgrade,pre-delete,pre-rollback"
 spec:
   scaleDownDelaySecondsAfterScaleOut: 300
   minReplicas: 1
