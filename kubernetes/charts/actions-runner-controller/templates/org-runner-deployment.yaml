@@ -1,0 +1,25 @@
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: {{ .Values.ghaRunner.name }}
+spec:
+  replicas: 1
+  template:
+    spec:
+      repository: jacobhjkim/declarative-eks-tutorial
+      serviceAccountName: {{ .Values.ghaRunner.name }}
+---
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: HorizontalRunnerAutoscaler
+metadata:
+  name: {{ .Values.ghaRunner.name }}-autoscaler
+spec:
+  scaleDownDelaySecondsAfterScaleOut: 300
+  minReplicas: 1
+  maxReplicas: 10
+  scaleTargetRef:
+    name: {{ .Values.ghaRunner.name }}
+  scaleUpTriggers:
+    - githubEvent:
+        workflowJob: {}
+      duration: "5m"
