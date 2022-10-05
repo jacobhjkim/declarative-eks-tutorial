@@ -33,6 +33,12 @@ locals {
   token            = data.aws_eks_cluster_auth.eks_auth.token
 }
 
+provider "kubernetes" {
+  host                   = local.cluster_endpoint
+  cluster_ca_certificate = base64decode(local.cluster_ca_cert)
+  token                  = local.token
+}
+
 resource "kubernetes_namespace" "manager_ns" {
   metadata {
     name   = "argocd-manager"

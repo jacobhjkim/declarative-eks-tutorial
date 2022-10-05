@@ -7,7 +7,7 @@ locals {
 
   kubernetes_labels = {
     "managed-by" = "terraform"
-    "owner"      = "terraform-migaloo-eks-addons"
+    "owner"      = "terraform-eks-addons"
   }
 
   argocd_manager_name         = "argocd-manager"
