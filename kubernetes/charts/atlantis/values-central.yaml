@@ -31,7 +31,7 @@ atlantis:
   repoConfig: |
     repos:
       - id: /.*/
-        apply_requirements: [mergeable, approved]
+        apply_requirements: [mergeable]
         allowed_overrides: [apply_requirements, workflow, delete_source_branch_on_merge]
 
   environmentSecrets:
