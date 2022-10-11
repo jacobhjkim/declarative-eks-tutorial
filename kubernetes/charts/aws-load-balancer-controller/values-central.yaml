@@ -1,0 +1,7 @@
+aws-load-balancer-controller:
+  replicaCount: 1
+  serviceAccount:
+    name: aws-load-balancer-controller
+    annotations:
+      eks.amazonaws.com/role-arn: "arn:aws:iam::765355018960:role/central-load-balancer-controller"
+  clusterName: central

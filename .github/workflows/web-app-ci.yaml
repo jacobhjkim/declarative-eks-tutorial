@@ -1,0 +1,53 @@
+name: web-app-ci
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'web-app/**'
+
+jobs:
+  docker:
+    name: Web App CI
+    runs-on: [self-hosted]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+          fetch-depth: 0
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          # list of Docker images to use as base name for tags
+          images: 765355018960.dkr.ecr.ap-northeast-2.amazonaws.com/web-app
+          # generate Docker tags based on the following events/attributes
+          tags: |
+            type=sha
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          driver: docker
+
+      - name: AWS Configure
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: ap-northeast-2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          registries: 765355018960
+
+      - name: Build and Push
+        uses: docker/build-push-action@v3
+        with:
+          context: ./web-app
+          file: ./web-app/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

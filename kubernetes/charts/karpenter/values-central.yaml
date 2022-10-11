@@ -1,0 +1,51 @@
+clusterName: central
+
+karpenter:
+  replicas: 1
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::765355018960:role/central-karpenter-controller
+  clusterName: central
+  clusterEndpoint: "https://922A559CFE9073A6D73613AFFA79CDED.gr7.ap-northeast-2.eks.amazonaws.com"
+  aws:
+    defaultInstanceProfile: KarpenterNodeInstanceProfile-central
+
+provisionerList:
+  default:
+    labels:
+      nodeType: default
+      nodeSubnet: private
+    requirements:
+      - key: "node.kubernetes.io/instance-type"
+        operator: In
+        values: [ "t3.large" ]
+      - key: "kubernetes.io/arch"
+        operator: In
+        values: [ "amd64" ]
+      - key: "topology.kubernetes.io/zone"
+        operator: In
+        values: [ "ap-northeast-2a", "ap-northeast-2b", "ap-northeast-2c" ]
+      - key: "karpenter.sh/capacity-type"
+        operator: In
+        values: [ "on-demand", "spot" ]
+  vault-worker:
+    labels:
+      nodeType: vault-worker
+      nodeSubnet: private
+    requirements:
+      - key: "node.kubernetes.io/instance-type"
+        operator: In
+        values: [ "t3.micro" ]
+      - key: "kubernetes.io/arch"
+        operator: In
+        values: [ "amd64" ]
+      - key: "topology.kubernetes.io/zone"
+        operator: In
+        values: [ "ap-northeast-2a", "ap-northeast-2b", "ap-northeast-2c" ]
+      - key: "karpenter.sh/capacity-type"
+        operator: In
+        values: [ "on-demand" ]
+    taints:
+      - key: workerType
+        value: vault
+        effect: NoSchedule

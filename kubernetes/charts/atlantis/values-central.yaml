@@ -1,0 +1,41 @@
+atlantis:
+  logLevel: info
+  orgAllowlist: github.com/jacobhjkim/declarative-eks-tutorial
+  github:
+    user: jacobhjkim
+  vcsSecretName: atlantis-vcs-secret
+  allowForkPRs: true
+  hidePrevPlanComments: true
+  enableDiffMarkdownFormat: true
+  defaultTFVersion: 1.3.1
+
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::765355018960:role/central-atlantis
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 4141
+  ingress:
+    ingressClassName: alb
+    annotations:
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:765355018960:certificate/757c8b86-0316-419a-947a-e182e6f1f1a7
+      alb.ingress.kubernetes.io/target-type: ip
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+      alb.ingress.kubernetes.io/ssl-redirect: "443"
+    path: /*
+    pathType: ImplementationSpecific
+    host: atlantis.jacobkim.io
+
+  repoConfig: |
+    repos:
+      - id: /.*/
+        apply_requirements: [mergeable]
+        allowed_overrides: [apply_requirements, workflow, delete_source_branch_on_merge]
+
+  environmentSecrets:
+   - name: VAULT_TOKEN
+     secretKeyRef:
+       name: atlantis-vault-secret
+       key: vault_token

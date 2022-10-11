@@ -1,0 +1,30 @@
+clusterName: dev
+
+karpenter:
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::295140746614:role/dev-karpenter-controller
+  clusterName: dev
+  clusterEndpoint: https://396881089D4D5CF595840E32C7FBF4E3.yl4.ap-northeast-2.eks.amazonaws.com
+  aws:
+    defaultInstanceProfile: KarpenterNodeInstanceProfile-dev
+  logLevel: info
+
+provisionerList:
+  default:
+    labels:
+      nodeType: default
+      nodeSubnet: private
+    requirements:
+      - key: "node.kubernetes.io/instance-type"
+        operator: In
+        values: [ "t3.large" ]
+      - key: "kubernetes.io/arch"
+        operator: In
+        values: [ "amd64" ]
+      - key: "topology.kubernetes.io/zone"
+        operator: In
+        values: [ "ap-northeast-2a", "ap-northeast-2b", "ap-northeast-2c" ]
+      - key: "karpenter.sh/capacity-type"
+        operator: In
+        values: [ "on-demand", "spot" ]

@@ -1,0 +1,8 @@
+external-dns:
+  serviceAccount:
+    annotations:
+        eks.amazonaws.com/role-arn: arn:aws:iam::765355018960:role/dev-external-dns
+  policy: upsert-only
+  txtOwnerId: dev
+  extraArgs:
+    - --aws-zone-type=public

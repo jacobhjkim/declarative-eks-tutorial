@@ -1,0 +1,75 @@
+{{- range .Values.apps }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .name }}-{{ $.Values.clusterName }}
+  namespace: {{ $.Values.rootNamespace }}
+  labels:
+    project: {{ .source.project | default $.Values.defaultProject | quote }}
+    cluster: {{ $.Values.clusterName }}
+    application: {{ .name }}
+    servicePhase: {{ $.Values.stage }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: {{ .source.project | default $.Values.defaultProject | quote }}
+  destination:
+    namespace: {{ .namespace }}
+    server: {{ $.Values.destinationServer | default "https://kubernetes.default.svc" }}
+  source:
+    path: {{ .source.path }}
+    {{- if .source.repoURL }}
+    repoURL: {{ .source.repoURL }}
+    {{- else }}
+    repoURL: {{ $.Values.defaultRepoURL }}
+    {{- end }}
+    targetRevision: {{ .source.targetRevision | default $.Values.defaultTargetRevision | quote }}
+    helm:
+      releaseName: {{ .name }}
+      {{- if .skipCrds }}
+      skipCrds: {{ .skipCrds }}
+      {{- end }}
+      valueFiles:
+        {{- if .valueFiles }}
+        {{- range $file := .valueFiles }}
+        - {{ tpl $file $ }}
+        {{- end }}
+        {{- end }}
+
+      {{- if .values }}
+      values: | {{ (tpl .values $) | nindent 8 }}
+      {{- end }}
+
+      parameters:
+        - name: clusterName
+          value: {{ $.Values.clusterName }}
+        - name: clusterRegion
+          value: {{ $.Values.clusterRegion }}
+        - name: stage
+          value: {{ $.Values.stage }}
+        - name: infraAccountId
+          value: {{ $.Values.infraAccountId | quote }}
+
+      {{- if .parameters }}
+      {{- range $name, $value := .parameters}}
+        - name: {{ $name }}
+          value: "{{ tpl $value $ }}"
+      {{- end }}
+      {{- end }}
+
+  {{- if .syncPolicy }}
+  syncPolicy:
+    {{- toYaml .syncPolicy | nindent 4 }}
+  {{- else }}
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+  {{- end }}
+  {{- with .ignoreDifferences }}
+  ignoreDifferences:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}

@@ -1,0 +1,50 @@
+{{- range $provisioner, $v := .Values.provisionerList }}
+apiVersion: karpenter.sh/v1alpha5
+kind: Provisioner
+metadata:
+  name: {{ $provisioner }}
+  annotations:
+    helm.sh/hook: "post-install,post-upgrade,pre-delete,pre-rollback"
+spec:
+  {{- if $v.labels }}
+  labels:
+  {{- toYaml $v.labels | nindent 4 }}
+  {{- end }}
+  {{- if $v.requirements }}
+  requirements:
+  {{- toYaml $v.requirements | nindent 4 }}
+  {{- end }}
+  {{- if $v.taints }}
+  taints:
+  {{ toYaml $v.taints | nindent 4 }}
+  {{- end }}
+  {{- if $v.limits }}
+  limits:
+  {{ toYaml $v.limits | nindent 4 }}
+  {{- end }}
+  providerRef:
+    name: default
+---
+{{- end }}
+apiVersion: karpenter.k8s.aws/v1alpha1
+kind: AWSNodeTemplate
+metadata:
+  name: default
+  annotations:
+    helm.sh/hook: "post-install,post-upgrade,pre-delete,pre-rollback"
+spec:
+  subnetSelector:
+    karpenter.sh/discovery: {{ $.Values.clusterName }}
+    kubernetes.io/role/internal-elb: "1"
+  securityGroupSelector:
+    karpenter.sh/discovery: {{ $.Values.clusterName }}
+  blockDeviceMappings:
+    - deviceName: /dev/xvda
+      ebs:
+        volumeSize: 8Gi
+        volumeType: gp2
+        encrypted: true
+        deleteOnTermination: true
+  tags:
+    ManagedBy: "Helm"
+    karpenter.sh/discovery: {{ $.Values.clusterName }}

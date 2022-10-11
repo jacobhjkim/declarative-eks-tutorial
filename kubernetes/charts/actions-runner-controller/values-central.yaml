@@ -1,0 +1,23 @@
+actions-runner-controller:
+  replicaCount: 1
+  certManagerEnabled: true
+  githubWebhookServer:
+    enabled: true
+    ingress:
+      enabled: true
+      ingressClassName: alb
+      annotations:
+        alb.ingress.kubernetes.io/scheme: internet-facing
+        alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:765355018960:certificate/757c8b86-0316-419a-947a-e182e6f1f1a7
+        alb.ingress.kubernetes.io/target-type: ip
+        alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+        alb.ingress.kubernetes.io/ssl-redirect: '443'
+      hosts:
+        - host: github-actions-webhook.jacobkim.io
+          paths:
+            - path: "/"
+              pathType: "Prefix"
+
+ghaRunner:
+  repository: jacobhjkim/declarative-eks-tutorial
+  name: gha-runner

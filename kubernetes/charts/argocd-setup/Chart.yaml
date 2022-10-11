@@ -1,0 +1,7 @@
+apiVersion: v2
+description: ArgoCD setup
+name: argocd-setup
+version: 0.0.1
+maintainers:
+  - name: jacob_kim
+    email: hello@jacob.kim

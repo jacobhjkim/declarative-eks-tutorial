@@ -1,0 +1,25 @@
+apiVersion: v2
+name: cert-manager
+# The version and appVersion fields are set automatically by the release tool
+version: 1.9.0
+appVersion: v1.9.0
+kubeVersion: ">= 1.19.0-0"
+description: A Helm chart for cert-manager
+home: https://github.com/cert-manager/cert-manager
+icon: https://raw.githubusercontent.com/cert-manager/cert-manager/d53c0b9270f8cd90d908460d69502694e1838f5f/logo/logo-small.png
+keywords:
+  - cert-manager
+  - kube-lego
+  - letsencrypt
+  - tls
+sources:
+  - https://github.com/cert-manager/cert-manager
+maintainers:
+  - name: jacob_kim
+    email: hello@jacob.kim
+dependencies:
+  - name: cert-manager
+    version: v1.9.0
+    repository: https://charts.jetstack.io
+    alias: cert-manager
+    condition: cert-manager.enabled

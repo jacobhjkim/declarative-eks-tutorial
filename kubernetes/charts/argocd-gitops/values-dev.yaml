@@ -1,0 +1,60 @@
+clusterName: dev
+clusterRegion: ap-northeast-2
+infraAccountId: "765355018960"
+rootNamespace: argocd
+
+stage: dev
+defaultRepoURL: https://github.com/jacobhjkim/declarative-eks-tutorial
+defaultTargetRevision: main
+defaultProject: dev-apps
+destinationServer: https://396881089D4D5CF595840E32C7FBF4E3.yl4.ap-northeast-2.eks.amazonaws.com
+
+apps:
+  - name: aws-ebs-csi-driver
+    namespace: kube-system
+    source:
+      path: kubernetes/charts/aws-ebs-csi-driver
+    valueFiles:
+      - values-dev.yaml
+  - name: aws-load-balancer-controller
+    namespace: kube-system
+    source:
+      path: kubernetes/charts/aws-load-balancer-controller
+    valueFiles:
+      - values-dev.yaml
+  - name: cert-manager
+    namespace: kube-system
+    source:
+      path: kubernetes/charts/cert-manager
+    valueFiles:
+      - values-dev.yaml
+  - name: echo-server
+    namespace: default
+    source:
+      path: kubernetes/charts/echo-server
+    valueFiles:
+      - values-dev.yaml
+  - name: external-dns
+    namespace: kube-system
+    source:
+      path: kubernetes/charts/external-dns
+    valueFiles:
+      - values-dev.yaml
+  - name: external-secrets-operator
+    namespace: external-secrets-operator
+    source:
+      path: kubernetes/charts/external-secrets-operator
+    valueFiles:
+      - values-dev.yaml
+  - name: karpenter
+    namespace: karpenter
+    source:
+      path: kubernetes/charts/karpenter
+    valueFiles:
+      - values-dev.yaml
+  - name: web-app
+    namespace: default
+    source:
+      path: kubernetes/charts/web-app
+    valueFiles:
+      - values-dev.yaml

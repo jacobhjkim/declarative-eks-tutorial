@@ -1,0 +1,18 @@
+apiVersion: v2
+name: vault
+version: 0.22.0
+appVersion: 1.10.3
+kubeVersion: ">= 1.16.0-0"
+description: Official HashiCorp Vault Chart
+home: https://www.vaultproject.io
+icon: https://github.com/hashicorp/vault/raw/f22d202cde2018f9455dec755118a9b84586e082/Vault_PrimaryLogo_Black.png
+keywords: ["vault", "security", "encryption", "secrets", "management", "automation", "infrastructure"]
+sources:
+  - https://github.com/hashicorp/vault-helm
+maintainers:
+  - name: jacob_kim
+    email: hello@jacob.kim
+dependencies:
+  - name: vault
+    version: 0.22.0
+    repository: https://helm.releases.hashicorp.com

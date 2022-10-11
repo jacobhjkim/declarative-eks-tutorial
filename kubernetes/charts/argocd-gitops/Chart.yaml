@@ -1,0 +1,7 @@
+apiVersion: v2
+description: ArgoCD gitops helm chart
+name: argocd-gitops
+version: 0.0.1
+maintainers:
+  - name: jacob_kim
+    email: hello@jacob.kim

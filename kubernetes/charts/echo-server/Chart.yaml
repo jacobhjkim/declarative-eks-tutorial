@@ -1,0 +1,8 @@
+apiVersion: v2
+name: echoserver
+description: echoserver helm chart
+version: 0.0.1
+appVersion: 1.10
+maintainers:
+  - name: jacob_kim
+    email: hello@jacob.kim
